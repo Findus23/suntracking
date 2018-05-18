@@ -9,9 +9,10 @@ from astropy.time import Time
 
 import config
 
+tz=timezone(config.tz)
 
 def time2altitude(time: datetime) -> float:
-    astro_time = Time(time.astimezone(tz=timezone(config.tz)))
+    astro_time = Time(tz.localize(time))
     altaz = coord.AltAz(location=config.loc, obstime=astro_time)
     sun = coord.get_sun(astro_time)
     return sun.transform_to(altaz).alt.degree

@@ -9,6 +9,7 @@ import config
 
 loc = coord.EarthLocation(lon=config.lon,
                           lat=config.lat, height=config.height)
+tz = timezone(config.tz)
 
 with open("sonnenuntergang.txt") as f:
     content = f.readlines()
@@ -20,7 +21,7 @@ for line in lines:
     if "#" in line:
         print("skipped")
         continue
-    parsetime = datetime.strptime("2018 " + line, "%Y %d.%m %H:%M").astimezone(tz=timezone(config.tz))
+    parsetime = tz.localize(datetime.strptime("2018 " + line, "%Y %d.%m %H:%M"))
     print(parsetime.isoformat())
     time = Time(parsetime)
     print(time)
