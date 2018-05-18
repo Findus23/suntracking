@@ -1,4 +1,5 @@
 import time
+from datetime import datetime, date
 
 import schedule
 
@@ -22,16 +23,17 @@ def create_schedule():
     print(altitude, standard_derivation)
 
     sunset_time = guess.get_time(altitude).time()
-
+    print(sunset_time)
     s = schedule.every().day
     s.at_time = sunset_time
     s.do(send_notification, sunset_time)
 
     prewarn_time = guess.get_time(altitude + standard_derivation * 3).time()
-    s = schedule.every().day
     print(prewarn_time)
+    s = schedule.every().day
     s.at_time = prewarn_time
-    s.do(send_notification, sunset_time, future=prewarn_time - sunset_time)
+    diff = datetime.combine(date.today(), sunset_time) - datetime.combine(date.today(), prewarn_time)
+    s.do(send_notification, sunset_time, future=diff)
 
 
 create_schedule()
