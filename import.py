@@ -3,6 +3,7 @@ from statistics import mean, stdev
 
 import astropy.coordinates as coord
 from astropy.time import Time
+from pytz import timezone
 
 import config
 
@@ -19,7 +20,7 @@ for line in lines:
     if "#" in line:
         print("skipped")
         continue
-    parsetime = datetime.strptime("2018 " + line, "%Y %d.%m %H:%M").astimezone()
+    parsetime = datetime.strptime("2018 " + line, "%Y %d.%m %H:%M").astimezone(tz=timezone(config.tz))
     print(parsetime.isoformat())
     time = Time(parsetime)
     print(time)
