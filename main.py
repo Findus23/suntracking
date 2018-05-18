@@ -3,10 +3,14 @@ import time
 import schedule
 
 import guess
+from sendmail import sendmail
 
 
-def send_notification(on_time=False):
-    print("DAS IST EIN TEST")
+def send_notification(time, future=False):
+    subject = "☀️ at {time}".format(time=time)
+    if future:
+        subject += " - {min} minutes left".format(min=future)
+    sendmail(subject, subject)
     return schedule.CancelJob
 
 
@@ -17,16 +21,17 @@ def create_schedule():
         standard_derivation = float(lines[1].strip())
     print(altitude, standard_derivation)
 
-    s = schedule.every().day
-
-    s.at_time = guess.get_time(altitude).time()
-    s.at_time = guess.get_time(altitude).time()
-    s.do(send_notification, on_time=True)
+    sunset_time = guess.get_time(altitude).time()
 
     s = schedule.every().day
-    print(guess.get_time(altitude + standard_derivation * 3).time())
-    s.at_time = guess.get_time(altitude + standard_derivation * 3).time()
-    s.do(send_notification)
+    s.at_time = sunset_time
+    s.do(send_notification, sunset_time)
+
+    prewarn_time = guess.get_time(altitude + standard_derivation * 3).time()
+    s = schedule.every().day
+    print(prewarn_time)
+    s.at_time = prewarn_time
+    s.do(send_notification, sunset_time, future=prewarn_time - sunset_time)
 
 
 create_schedule()

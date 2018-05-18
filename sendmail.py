@@ -4,10 +4,10 @@ from email.mime.text import MIMEText
 from config import by, to
 
 
-def sendmail():
-    msg = MIMEText("test")
+def sendmail(subject, text):
+    msg = MIMEText(text)
 
-    msg['Subject'] = "subject"
+    msg['Subject'] = subject
     msg['From'] = by
     msg['To'] = to
 
