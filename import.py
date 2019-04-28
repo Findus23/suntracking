@@ -18,8 +18,7 @@ with open("sonnenuntergang.txt") as f:
 angles = []
 
 for line in lines:
-    if "#" in line:
-        print("skipped")
+    if "#" in line or not line:
         continue
     parsetime = tz.localize(datetime.strptime("2018 " + line, "%Y %d.%m %H:%M"))
     print(parsetime.isoformat())

@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta, time
 
-from pytz import timezone
-
-midday = time(12)
-
 import astropy.coordinates as coord
 from astropy.time import Time
+from pytz import timezone
 
 import config
 
-tz=timezone(config.tz)
+midday = time(12)
+
+tz = timezone(config.tz)
+
 
 def time2altitude(time: datetime) -> float:
     astro_time = Time(tz.localize(time))
@@ -18,17 +18,16 @@ def time2altitude(time: datetime) -> float:
     return sun.transform_to(altaz).alt.degree
 
 
-def get_time(altitude, time=False):
+def get_time(altitude):
     lower = datetime.combine(datetime.now().date(), midday)
     upper = lower + timedelta(hours=12)
 
-    while upper - lower > timedelta(seconds=30):
+    while upper - lower > timedelta(seconds=1):
         middle = lower + (upper - lower) / 2
         if time2altitude(middle) > altitude:
             lower = middle
         else:
             upper = middle
-        # print(upper, lower)
 
     return lower + (upper - lower) / 2
 
